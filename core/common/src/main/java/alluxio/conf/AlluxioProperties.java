@@ -12,7 +12,7 @@
 package alluxio.conf;
 
 import static java.util.stream.Collectors.toSet;
-
+import alluxio.conf.InstancedConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -69,6 +69,14 @@ public class AlluxioProperties {
    */
   public AlluxioProperties() {}
 
+  static private String getStackTrace() {
+    String stacktrace = " ";
+    for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+      stacktrace = stacktrace.concat(element.getClassName() + "\t");
+    }
+    return stacktrace;
+  }
+
   /**
    * @param alluxioProperties properties to copy
    */
@@ -83,6 +91,7 @@ public class AlluxioProperties {
    */
   @Nullable
   public String get(PropertyKey key) {
+    System.out.println("[CTEST][GET-PARAM] " + key.getName()); //CTEST
     if (mUserProps.containsKey(key)) {
       return mUserProps.get(key).orElse(null);
     }
@@ -106,6 +115,14 @@ public class AlluxioProperties {
    * @param source the source of this value for the key
    */
   public void put(PropertyKey key, String value, Source source) {
+    if (!mUserProps.containsKey(key) || source.compareTo(getSource(key)) >= 0) {
+      System.out.println("[CTEST][SET-PARAM] " + key.getName() + getStackTrace()); //CTEST
+      mUserProps.put(key, Optional.ofNullable(value));
+      mSources.put(key, source);
+      mHash.markOutdated();
+      }
+    }
+public void put_purged(PropertyKey key, String value, Source source) {
     if (!mUserProps.containsKey(key) || source.compareTo(getSource(key)) >= 0) {
       mUserProps.put(key, Optional.ofNullable(value));
       mSources.put(key, source);
@@ -151,7 +168,7 @@ public class AlluxioProperties {
         // is made dynamic
         propertyKey = new PropertyKey.Builder(key).setIsBuiltIn(false).build();
       }
-      put(propertyKey, value, source);
+      put_purged(propertyKey, value, source);
     }
     mHash.markOutdated();
   }

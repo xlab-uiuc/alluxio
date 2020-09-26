@@ -80,6 +80,7 @@ public final class SpecificPathConfiguration implements AlluxioConfiguration {
 
   @Override
   public boolean isSet(PropertyKey key) {
+    System.out.println("[CTEST][GET-PARAM] " + key.getName());
     return conf(key).isSet(key);
   }
 
@@ -163,7 +164,7 @@ public final class SpecificPathConfiguration implements AlluxioConfiguration {
     AlluxioProperties properties = mClusterConf.copyProperties();
     for (PropertyKey key : keySet()) {
       mPathConf.getConfiguration(mPath, key).ifPresent(
-          config -> properties.put(key, config.get(key), Source.PATH_DEFAULT));
+          config -> properties.put_purged(key, config.get(key), Source.PATH_DEFAULT));
     }
     return properties;
   }

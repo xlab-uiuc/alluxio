@@ -174,6 +174,7 @@ public class InstancedConfiguration implements AlluxioConfiguration {
 
   @Override
   public boolean isSet(PropertyKey key) {
+    System.out.println("[CTEST][GET-PARAM] " + key.getName());
     return mProperties.isSet(key) && isResolvable(key);
   }
 
@@ -364,6 +365,7 @@ public class InstancedConfiguration implements AlluxioConfiguration {
     for (Map.Entry<PropertyKey, String> entry: mProperties.entrySet()) {
       String key = entry.getKey().getName();
       if (prefixKey.isNested(key)) {
+        System.out.println("[CTEST][GET-PARAM] " + key); //CTEST
         String suffixKey = key.substring(prefixKey.length() + 1);
         ret.put(suffixKey, entry.getValue());
       }
