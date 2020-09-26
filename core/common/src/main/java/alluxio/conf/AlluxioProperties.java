@@ -12,7 +12,7 @@
 package alluxio.conf;
 
 import static java.util.stream.Collectors.toSet;
-
+import alluxio.conf.InstancedConfiguration;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;

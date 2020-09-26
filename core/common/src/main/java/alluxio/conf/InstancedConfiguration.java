@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
  * Alluxio configuration.
  */
 public class InstancedConfiguration implements AlluxioConfiguration {
+  public static String CTESTFILEPATH = System.getProperty("user.dir").split("/ctest-alluxio/core/")[0] + "/ctest-alluxio/core/alluxio-ctest.properties";
   private static final Logger LOG = LoggerFactory.getLogger(InstancedConfiguration.class);
 
   /** Regex string to find "${key}" for variable substitution. */
@@ -82,6 +83,8 @@ public class InstancedConfiguration implements AlluxioConfiguration {
    * @param properties alluxio properties underlying this configuration
    */
   public InstancedConfiguration(AlluxioProperties properties) {
+    Properties ctestProps = ConfigurationUtils.loadPropertiesFromFile(CTESTFILEPATH);
+    properties.merge(ctestProps, Source.siteProperty(CTESTFILEPATH));
     mProperties = properties;
     mClusterDefaultsLoaded = false;
   }
@@ -98,6 +101,8 @@ public class InstancedConfiguration implements AlluxioConfiguration {
    * @param clusterDefaultsLoaded Whether or not the properties represent the cluster defaults
    */
   public InstancedConfiguration(AlluxioProperties properties, boolean clusterDefaultsLoaded) {
+    Properties ctestProps = ConfigurationUtils.loadPropertiesFromFile(CTESTFILEPATH);
+    properties.merge(ctestProps, Source.siteProperty(CTESTFILEPATH));
     mProperties = properties;
     mClusterDefaultsLoaded = clusterDefaultsLoaded;
   }
@@ -113,7 +118,10 @@ public class InstancedConfiguration implements AlluxioConfiguration {
    * @param conf configuration to copy
    */
   public InstancedConfiguration(AlluxioConfiguration conf) {
-    mProperties = conf.copyProperties();
+    Properties ctestProps = ConfigurationUtils.loadPropertiesFromFile(CTESTFILEPATH);
+    AlluxioProperties properties = conf.copyProperties();
+    properties.merge(ctestProps, Source.siteProperty(CTESTFILEPATH));
+    mProperties = properties;
     mClusterDefaultsLoaded = conf.clusterDefaultsLoaded();
   }
 
