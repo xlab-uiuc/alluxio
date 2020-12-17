@@ -80,7 +80,7 @@ public final class SpecificPathConfiguration implements AlluxioConfiguration {
 
   @Override
   public boolean isSet(PropertyKey key) {
-    System.out.println("[CTEST][GET-PARAM] " + key.getName());
+    System.out.println("[CTEST][GET-PARAM] " + key.getName() + getStackTrace());
     return conf(key).isSet(key);
   }
 

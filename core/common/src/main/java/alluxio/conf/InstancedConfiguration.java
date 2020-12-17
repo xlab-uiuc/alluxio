@@ -174,7 +174,7 @@ public class InstancedConfiguration implements AlluxioConfiguration {
 
   @Override
   public boolean isSet(PropertyKey key) {
-    System.out.println("[CTEST][GET-PARAM] " + key.getName());
+    System.out.println("[CTEST][GET-PARAM] " + key.getName() + getStackTrace());
     return mProperties.isSet(key) && isResolvable(key);
   }
 
@@ -359,13 +359,21 @@ public class InstancedConfiguration implements AlluxioConfiguration {
     }
   }
 
+  static private String getStackTrace() {
+    String stacktrace = " ";
+    for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+      stacktrace = stacktrace.concat(element.getClassName() + "\t");
+    }
+    return stacktrace;
+  }
+
   @Override
   public Map<String, String> getNestedProperties(PropertyKey prefixKey) {
     Map<String, String> ret = Maps.newHashMap();
     for (Map.Entry<PropertyKey, String> entry: mProperties.entrySet()) {
       String key = entry.getKey().getName();
       if (prefixKey.isNested(key)) {
-        System.out.println("[CTEST][GET-PARAM] " + key); //CTEST
+        System.out.println("[CTEST][GET-PARAM] " + key + getStackTrace()); //CTEST
         String suffixKey = key.substring(prefixKey.length() + 1);
         ret.put(suffixKey, entry.getValue());
       }

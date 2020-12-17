@@ -91,7 +91,7 @@ public class AlluxioProperties {
    */
   @Nullable
   public String get(PropertyKey key) {
-    System.out.println("[CTEST][GET-PARAM] " + key.getName()); //CTEST
+    System.out.println("[CTEST][GET-PARAM] " + key.getName() + getStackTrace()); //CTEST
     if (mUserProps.containsKey(key)) {
       return mUserProps.get(key).orElse(null);
     }
