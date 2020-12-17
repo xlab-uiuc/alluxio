@@ -78,6 +78,15 @@ public final class SpecificPathConfiguration implements AlluxioConfiguration {
     return conf(key).get(key, options);
   }
 
+  private String getStackTrace() {
+    String stacktrace = " ";
+    for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+      stacktrace = stacktrace.concat(
+        e.getClassName() + "#" + e.getMethodName() + "#" + e.getLineNumber() + "\t");
+    }
+    return stacktrace;
+  }
+
   @Override
   public boolean isSet(PropertyKey key) {
     System.out.println("[CTEST][GET-PARAM] " + key.getName() + getStackTrace());

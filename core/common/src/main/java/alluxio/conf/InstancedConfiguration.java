@@ -359,10 +359,11 @@ public class InstancedConfiguration implements AlluxioConfiguration {
     }
   }
 
-  static private String getStackTrace() {
+  private String getStackTrace() {
     String stacktrace = " ";
-    for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-      stacktrace = stacktrace.concat(element.getClassName() + "\t");
+    for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+      stacktrace = stacktrace.concat(
+        e.getClassName() + "#" + e.getMethodName() + "#" + e.getLineNumber() + "\t");
     }
     return stacktrace;
   }
